@@ -111,14 +111,17 @@ if profile != '' and profile not in profile_list:
     usage(1)
 
 # repo data
-lmn_url = 'https://deb.linuxmuster.net/'
+lmn_url = 'https://package.edulution.io/'
 lmnkey_remote = lmn_url + 'pub.gpg'
-lmnkey_local = '/usr/share/keyrings/linuxmuster.net.gpg'
-lmn_list_pre = '/etc/apt/sources.list.d/lmn.'
-lmn74_def = 'Types: deb\nURIs: ' + lmn_url + '\nSuites: lmn74\nComponents: main\nSigned-By: ' + lmnkey_local
-lmn74_sources = lmn_list_pre + 'sources'
-lmn73_def = 'deb [arch=amd64 signed-by=' + lmnkey_local + '] ' + lmn_url + ' lmn73 main'
-lmn73_list = lmn_list_pre + 'list'
+# The edulution key is ASCII-armored, upstream's is binary. Rather than
+# dearmor it here - which would make gpg a hard requirement of a script that
+# runs on a bare Ubuntu - it is stored as .asc; apt reads an armored keyring
+# behind Signed-By since 2.4.
+lmnkey_local = '/usr/share/keyrings/edulution.asc'
+lmn_list_pre = '/etc/apt/sources.list.d/edulution.'
+# The suites of package.edulution.io are Ubuntu codenames, not lmnNN.
+lmn_def = 'Types: deb\nURIs: ' + lmn_url + '\nSuites: resolute\nComponents: main\nSigned-By: ' + lmnkey_local
+lmn_sources = lmn_list_pre + 'sources'
 pkgname = 'linuxmuster-prepare'
 
 
@@ -166,10 +169,11 @@ id, version = os_release()
 if id != 'ubuntu':
     print(id + ' is not the expected os.')
     sys.exit(1)
-if version != '26.04' and version != '24.04':
+# edulution maintains linuxmuster 7.4 on Ubuntu 26.04 only.
+if version != '26.04':
     print(version + ' is not the expected version.')
     sys.exit(1)
-print('## install linuxmuster.net repos')
+print('## install edulution repos')
 
 
 # install repo key
@@ -177,10 +181,7 @@ urllib.request.urlretrieve(lmnkey_remote, lmnkey_local)
 
 
 # install repos
-if version == '26.04':
-    writeTextfile(lmn74_sources, lmn74_def, 'w')
-else:
-    writeTextfile(lmn73_list, lmn73_def, 'w')
+writeTextfile(lmn_sources, lmn_def, 'w')
 
 # get updates
 print('## install software updates')

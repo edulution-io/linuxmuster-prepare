@@ -69,7 +69,11 @@ libdir = '/var/lib/linuxmuster'
 prepini = libdir + '/prepare.ini'
 setupini = libdir + '/setup.ini'
 purgepkgs = 'cloud-guest-utils cloud-init cloud-init-base lxc snapd'
-srvpkgs = 'linuxmuster-base7 linuxmuster-linbo7 linuxmuster-webui7 linuxmuster-linbo-gui7 sophomorix-samba'
+# tools7/cli7/api7 would come in transitively, but srvpkgs is also the
+# verification list of do_install() below, so they are named explicitly.
+srvpkgs = ('linuxmuster-base7 linuxmuster-linbo7 linuxmuster-tools7 '
+           'linuxmuster-cli7 linuxmuster-api7 edulution-linbo-gui7 '
+           'sophomorix-samba')
 swapfile = '/swap.img'
 
 
@@ -221,12 +225,17 @@ def apply_config(config):
     setup_mode = config.setup_mode
 
 
-# test internet connection by deb.linuxmuster.net
-def internet(host="deb.linuxmuster.net", port=443, timeout=3):
+# test internet connection by package.edulution.io
+def internet(host="package.edulution.io", port=443, timeout=3):
     """
-    Host: deb.linuxmuster.net
+    Host: package.edulution.io
     OpenPort: 443/tcp
     Service: https (http protocol over TLS/SSL)
+
+    The packages come from package.edulution.io, so that is the host whose
+    reachability decides whether the install can work. A segmented network
+    that reaches deb.linuxmuster.net but not us would otherwise pass this
+    check and fail later.
     """
     try:
         socket.setdefaulttimeout(timeout)

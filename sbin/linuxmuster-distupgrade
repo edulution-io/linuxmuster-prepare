@@ -39,7 +39,10 @@ done
 # package to satisfy the target, so reinforce all installed linuxmuster-*
 # packages that way first, then let dist-upgrade handle the rest of the
 # system as before.
-lmnpkgs="$(dpkg -l 'linuxmuster-*' 2>/dev/null | awk '/^ii/ { print $2 }')"
+# edulution-* is in the glob because the LINBO GUI ships as
+# edulution-linbo-gui7 and would otherwise be left behind by the reinforce
+# pass below.
+lmnpkgs="$(dpkg -l 'linuxmuster-*' 'edulution-*' 2>/dev/null | awk '/^ii/ { print $2 }')"
 
 apt-get update && \
   { [ -z "$lmnpkgs" ] || apt-get -y install $lmnpkgs; } && \
