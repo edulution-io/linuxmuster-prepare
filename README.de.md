@@ -1,14 +1,21 @@
+> [!NOTE]
+> **Dies ist der edulution-Fork von [linuxmuster-prepare](https://github.com/linuxmuster/linuxmuster-prepare).**
+> Wir bauen auf der großartigen Arbeit der linuxmuster.net-Community auf. Der eigene Fork
+> gibt uns die Flexibilität, Sicherheitsupdates und neue Funktionen schnell für
+> edulution-Installationen bereitzustellen – und unsere Änderungen bringen wir aktiv in
+> das Community-Projekt zurück. Die Pakete gibt es auf [package.edulution.io](https://package.edulution.io).
+
 # linuxmuster-prepare
 
 Skripte und Konfigurationsvorlagen für die Vorbereitung einer virtuellen Appliance für linuxmuster.net 7.4 auf Basis von Ubuntu Server 26.04.
 
-Hinweis: Zur Vorbereitung eines linuxmuster.net-7.3-Systems gehen Sie bitte [hier lang](https://github.com/linuxmuster/linuxmuster-prepare/tree/7.3).
+Hinweis: Der edulution-Fork umfasst nur linuxmuster.net 7.4 auf Ubuntu 26.04. Zur Vorbereitung eines linuxmuster.net-7.3-Systems nutzen Sie bitte den [7.3-Branch von linuxmuster.net](https://github.com/linuxmuster/linuxmuster-prepare/tree/7.3).
 
 ## Das Skript lmn-appliance
 
-[lmn-appliance](https://raw.githubusercontent.com/linuxmuster/linuxmuster-prepare/master/lmn-appliance) bereitet die Appliance für das Rollout vor:
+[lmn-appliance](https://raw.githubusercontent.com/edulution-io/linuxmuster-prepare/master/lmn-appliance) bereitet die Appliance für das Rollout vor:
 - Es bringt das Betriebssystem auf den aktuellen Stand,
-- richtet das linuxmuster.net-Paket-Repo ein,
+- richtet das edulution-Paket-Repo (package.edulution.io) ein,
 - installiert das Paket **linuxmuster-prepare** und
 - startet dann das Vorbereitungsskript _lmn-prepare_,
   - das die für das jeweilige Appliance-Profil benötigten Pakete installiert,
@@ -20,7 +27,7 @@ Hinweis: Richten Sie Ihre Serverdateisysteme schon bei der Installation von Ubun
 
 Installation:
 - Skript herunterladen:  
-  `wget https://raw.githubusercontent.com/linuxmuster/linuxmuster-prepare/master/lmn-appliance`
+  `wget https://raw.githubusercontent.com/edulution-io/linuxmuster-prepare/master/lmn-appliance`
 - Ausführbar machen:
   `chmod +x lmn-appliance`
 - Skript starten:
@@ -77,7 +84,7 @@ Parameter | Wert | Bedeutung
   - auf HD 2 eine ext4-Partition einrichten und unter /srv einhängen Eintrag in `/etc/fstab`:
     `/dev/vdb1 /srv ext4 defaults 0 1`
 - Nach dem ersten Boot als root einloggen und Prepare-Skript herunterladen:  
-  `# wget https://raw.githubusercontent.com/linuxmuster/linuxmuster-prepare/master/lmn-appliance`
+  `# wget https://raw.githubusercontent.com/edulution-io/linuxmuster-prepare/master/lmn-appliance`
 - Skript ausführbar machen und starten:
   `./lmn-appliance -p server -u`
 - Appliance herunterfahren und Snapshot erstellen.

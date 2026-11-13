@@ -1,15 +1,22 @@
+> [!NOTE]
+> **This is the edulution fork of [linuxmuster-prepare](https://github.com/linuxmuster/linuxmuster-prepare).**
+> We build on the great work of the linuxmuster.net community. Maintaining our own
+> fork gives us the flexibility to ship security fixes and new features to edulution
+> installations quickly, and we actively contribute our changes back to the community
+> project. The packages are published at [package.edulution.io](https://package.edulution.io).
+
 # linuxmuster-prepare
 
 Scripts and configuration templates to prepare a virtual appliance for linuxmuster.net 7.4 based on Ubuntu Server 26.04.
 
-Note: If you want to prepare a linuxmuster.net 7.3 system, you have to go [here](https://github.com/linuxmuster/linuxmuster-prepare/tree/7.3).
+Note: The edulution fork covers linuxmuster.net 7.4 on Ubuntu 26.04 only. To prepare a linuxmuster.net 7.3 system, use the [upstream 7.3 branch](https://github.com/linuxmuster/linuxmuster-prepare/tree/7.3).
 
 ## The lmn-appliance script
 
-[lmn-appliance](https://raw.githubusercontent.com/linuxmuster/linuxmuster-prepare/master/lmn-appliance) prepares the appliance for rollout:
+[lmn-appliance](https://raw.githubusercontent.com/edulution-io/linuxmuster-prepare/master/lmn-appliance) prepares the appliance for rollout:
 
 - It brings the operating system up to date,
-- sets up the linuxmuster.net package repository,
+- sets up the edulution package repository (package.edulution.io),
 - installs the **linuxmuster-prepare** package, and
 - then starts the preparation script _lmn-prepare_,
   - which installs the packages required for the respective appliance profile,
@@ -22,13 +29,13 @@ Note: Configure your server file systems to meet your requirements already durin
 Installation:
 
 - Download the script:  
-  `wget https://raw.githubusercontent.com/linuxmuster/linuxmuster-prepare/master/lmn-appliance`
+  `wget https://raw.githubusercontent.com/edulution-io/linuxmuster-prepare/master/lmn-appliance`
 - Make it executable:
   `chmod +x lmn-appliance`
 - Run the script:
   `./lmn-appliance <options>`
 
-If `lmn-appliance` is called without options, it only sets up the linuxmuster.net package repository and updates the system. In that case, the appliance preparation must be completed afterwards with `lmn-prepare` (see `lmn-prepare -h` for options).
+If `lmn-appliance` is called without options, it only sets up the edulution package repository and updates the system. In that case, the appliance preparation must be completed afterwards with `lmn-prepare` (see `lmn-prepare -h` for options).
 
 ### Options for lmn-appliance
 
@@ -81,7 +88,7 @@ Parameter | Value | Description
   - create an ext4 partition on HD 2 and mount it at /srv with the following entry in `/etc/fstab`:
     `/dev/vdb1 /srv ext4 defaults 0 1`
 - After the first boot, log in as root and download the prepare script:  
-  `# wget https://raw.githubusercontent.com/linuxmuster/linuxmuster-prepare/master/lmn-appliance`
+  `# wget https://raw.githubusercontent.com/edulution-io/linuxmuster-prepare/master/lmn-appliance`
 - Make the script executable and run it:
   `./lmn-appliance -p server -u`
 - Shut down the appliance and create a snapshot.
