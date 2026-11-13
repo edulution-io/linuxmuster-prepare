@@ -7,6 +7,7 @@
 # Date         : 20260827
 #
 
+import base64
 import configparser
 import getopt
 import os
@@ -113,11 +114,10 @@ if profile != '' and profile not in profile_list:
 # repo data
 lmn_url = 'https://package.edulution.io/'
 lmnkey_remote = lmn_url + 'pub.gpg'
-# The edulution key is ASCII-armored, upstream's is binary. Rather than
-# dearmor it here - which would make gpg a hard requirement of a script that
-# runs on a bare Ubuntu - it is stored as .asc; apt reads an armored keyring
-# behind Signed-By since 2.4.
-lmnkey_local = '/usr/share/keyrings/edulution.asc'
+# The keyring path of the edulution-archive-keyring package. lmn-appliance
+# only bootstraps it; once the package is installed (linuxmuster-prepare
+# depends on it) it owns the file and brings rotated keys with apt upgrade.
+lmnkey_local = '/usr/share/keyrings/edulution.gpg'
 lmn_list_pre = '/etc/apt/sources.list.d/edulution.'
 # The suites of package.edulution.io are Ubuntu codenames, not lmnNN.
 lmn_def = 'Types: deb\nURIs: ' + lmn_url + '\nSuites: resolute\nComponents: main\nSigned-By: ' + lmnkey_local
@@ -177,7 +177,26 @@ print('## install edulution repos')
 
 
 # install repo key
-urllib.request.urlretrieve(lmnkey_remote, lmnkey_local)
+# pub.gpg is ASCII-armored, while edulution.gpg has to be a binary keyring.
+# The armor is plain base64 between the header block and the CRC line, so it
+# is decoded here instead of making gpg a requirement on a bare Ubuntu.
+def dearmor(armored):
+    lines = armored.decode('ascii').strip().splitlines()
+    begin = next(i for i, l in enumerate(lines) if l.startswith('-----BEGIN PGP PUBLIC KEY BLOCK'))
+    end = next(i for i, l in enumerate(lines) if l.startswith('-----END PGP PUBLIC KEY BLOCK'))
+    body = lines[begin + 1:end]
+    # header lines ("Comment: ...") end with the first empty line
+    if '' in body:
+        body = body[body.index('') + 1:]
+    body = [l for l in body if l and not l.startswith('=')]
+    return base64.b64decode(''.join(body))
+
+
+with urllib.request.urlopen(lmnkey_remote) as response:
+    keyring = dearmor(response.read())
+with open(lmnkey_local, 'wb') as keyfile:
+    keyfile.write(keyring)
+os.chmod(lmnkey_local, 0o644)
 
 
 # install repos
